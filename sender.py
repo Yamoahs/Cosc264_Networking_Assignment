@@ -6,6 +6,9 @@ import socket
 Sender Sockets: s_in and s_out
 
 '''
+#IP address
+HOST =  "127.0.0.1"
+
 #valid Port no.
 VALID_PORTS =  range(1024, 64001)
 
@@ -14,21 +17,32 @@ args = (sys.argv)
 #cmdargs.pop(0)
 
 #try:
-if len(cmdargs) == 5:
+if len(args) == 5:
     for port in args[1:-1]:
         if int(port) not in VALID_PORTS:
             #HAVE A TRY EXCEPTION
             print("port {} not a valid port".format(port))
+    sender_in_port = args[1]
+    sender_out_port = args[2]
+    channel_sender_in = args[3]
+    filename = str(args[4])
+
+    print("IN PORT: {}\nOUT PORT: {}\n\
+channel_sender_in PORT: {}\nFILENAME: {}".format(sender_in_port, \
+     sender_out_port, channel_sender_in, filename))
+
 else:
-    print("Inut ERROR")
+    print("Input ERROR")
 #raise Exception("Invalid number of parameters")
 
+#Create the sockets
+sender_in = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sender_out = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
+#Bind the sockets
+sender_in.bind((HOST,sender_in_port))
+sender_out.bind((HOST,sender_out_port))
 
-
-
-
-s_in = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 s_in.connect(("localhost", 1234))
 
