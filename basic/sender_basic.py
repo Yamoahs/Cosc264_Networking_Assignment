@@ -54,12 +54,6 @@ sender_out.connect((HOST,reciever_sender_in))
 
 
 
-
-
-
-# s_in.connect(("localhost", 1234))
-#
-# data = "hello server"
 sender_out.send(filename.encode('utf-8'))
 filename = sender_out.recv(512)
 print("From Reciever: ", filename.decode('utf-8'))
