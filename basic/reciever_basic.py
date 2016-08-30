@@ -33,19 +33,41 @@ VALID_PORTS =  range(1024, 64001)
 args = (sys.argv)
 
 #try:
-if len(args) == 5:
+if len(args) == 4:
     for port in args[1:-1]:
         if int(port) not in VALID_PORTS:
             #HAVE A TRY EXCEPTION
             print("port {} not a valid port".format(port))
     reciever_in_port = int(args[1])
     reciever_out_port = int(args[2])
-    reciever_sender_in = int(args[3])
-    filename = str(args[4])
+    out_filename = str(args[0])
 
-    print("IN PORT: {}\nOUT PORT: {}\n\
-reciever_sender_in PORT: {}\nFILENAME: {}".format(sender_in_port, \
-     sender_out_port, reciever_sender_in, filename))
+    print("IN PORT: {}\nOUT PORT: {}\nFILENAME: {}".format(reciever_in_port, \
+     reciever_out_port, out_filename))
 
 else:
     print("Input ERROR")
+
+#Create the sockets
+receiver_in_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+receiver_out_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+#Bind the sockets
+receiver_in_socket.bind((HOST,reciever_in_port))
+receiver_out_socket.bind((HOST,reciever_out_port))
+
+#connect the socket
+receiver_out_socket.connect((HOST,reciever_out_port))
+
+#Opening output file
+output_file = open("{}".format(out_filename)).read()
+
+#expected
+expected = 0
+
+#closing sockets
+receiver_in_socket.close()
+receiver_out_socket.close()
+
+#closing the file
+#output_file.close()
