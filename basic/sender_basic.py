@@ -24,7 +24,7 @@ if len(args) == 4:
             print("port {} not a valid port".format(port))
     sender_in_port = int(args[1])
     sender_out_port = int(args[2])
-    filename = str(args[0])
+    filename = str(args[3])
 
     print("IN PORT: {}\nOUT PORT: {}\nFILENAME: {}".format(sender_in_port, \
      sender_out_port, filename))

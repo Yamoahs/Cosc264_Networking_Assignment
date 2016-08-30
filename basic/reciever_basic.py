@@ -18,6 +18,7 @@
 #!/usr/bin/python
 import sys
 import socket
+import os.path
 
 '''
 Reciever Sockets: r_in and r_out
@@ -40,7 +41,7 @@ if len(args) == 4:
             print("port {} not a valid port".format(port))
     reciever_in_port = int(args[1])
     reciever_out_port = int(args[2])
-    out_filename = str(args[0])
+    out_filename = str(args[3])
 
     print("IN PORT: {}\nOUT PORT: {}\nFILENAME: {}".format(reciever_in_port, \
      reciever_out_port, out_filename))
@@ -60,7 +61,10 @@ receiver_out_socket.bind((HOST,reciever_out_port))
 receiver_out_socket.connect((HOST,reciever_out_port))
 
 #Opening output file
-output_file = open("{}".format(out_filename)).read()
+if os.path.isfile(out_filename):
+    print('File is a valid file')
+# output_file = open(out_filename, "w")
+# output_file = open("{}".format(out_filename).read())
 
 #expected
 expected = 0
