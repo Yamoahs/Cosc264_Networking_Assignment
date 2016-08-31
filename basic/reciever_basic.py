@@ -62,12 +62,18 @@ receiver_out_socket.connect((HOST,reciever_out_port))
 
 #Opening output file
 if os.path.isfile(out_filename):
-    print('File is a valid file')
-# output_file = open(out_filename, "w")
+    print('File already exists')
+else:
+    output_file = open(out_filename, "w")
 # output_file = open("{}".format(out_filename).read())
 
 #expected
 expected = 0
+
+
+
+
+
 
 #closing sockets
 receiver_in_socket.close()
