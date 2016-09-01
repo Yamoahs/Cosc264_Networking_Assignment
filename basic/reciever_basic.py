@@ -47,14 +47,25 @@ if len(args) == 4:
     reciever_out_port = int(args[2])
     out_filename = str(args[3])
 
-    print("IN PORT: {}\nOUT PORT: {}\nFILENAME: {}".format(reciever_in_port, \
-     reciever_out_port, out_filename))
-    stdin_successful = True
+    #Opening output file
+    if os.path.isfile(out_filename):
+        print('File already exists')
+    else:
+        output_file = open(out_filename, "w")
+        stdin_successful = True
+    # output_file = open("{}".format(out_filename).read())
+
+
+
 
 else:
     print("Input ERROR")
 
 if stdin_successful:
+
+    print("IN PORT: {}\nOUT PORT: {}\nFILENAME: {}".format(reciever_in_port, \
+     reciever_out_port, out_filename))
+
     #Create the sockets
     receiver_in_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     receiver_out_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -66,12 +77,6 @@ if stdin_successful:
     #connect the socket
     receiver_out_socket.connect((HOST,reciever_out_port))
 
-    #Opening output file
-    if os.path.isfile(out_filename):
-        print('File already exists')
-    else:
-        output_file = open(out_filename, "w")
-    # output_file = open("{}".format(out_filename).read())
 
     #expected
     expected = 0
