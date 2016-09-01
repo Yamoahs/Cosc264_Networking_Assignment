@@ -18,6 +18,7 @@
 #!/usr/bin/python
 import sys
 import socket
+import select
 import os.path
 
 '''
@@ -32,6 +33,7 @@ VALID_PORTS =  range(1024, 64001)
 
 # Get the arguments list
 args = (sys.argv)
+input_successful = False
 
 #try:
 if len(args) == 4:
@@ -45,39 +47,41 @@ if len(args) == 4:
 
     print("IN PORT: {}\nOUT PORT: {}\nFILENAME: {}".format(reciever_in_port, \
      reciever_out_port, out_filename))
+    input_successful = True
 
 else:
     print("Input ERROR")
 
-#Create the sockets
-receiver_in_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-receiver_out_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+if input_successful:
+    #Create the sockets
+    receiver_in_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    receiver_out_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-#Bind the sockets
-receiver_in_socket.bind((HOST,reciever_in_port))
-receiver_out_socket.bind((HOST,reciever_out_port))
+    #Bind the sockets
+    receiver_in_socket.bind((HOST,reciever_in_port))
+    receiver_out_socket.bind((HOST,reciever_out_port))
 
-#connect the socket
-receiver_out_socket.connect((HOST,reciever_out_port))
+    #connect the socket
+    receiver_out_socket.connect((HOST,reciever_out_port))
 
-#Opening output file
-if os.path.isfile(out_filename):
-    print('File already exists')
-else:
-    output_file = open(out_filename, "w")
-# output_file = open("{}".format(out_filename).read())
+    #Opening output file
+    if os.path.isfile(out_filename):
+        print('File already exists')
+    else:
+        output_file = open(out_filename, "w")
+    # output_file = open("{}".format(out_filename).read())
 
-#expected
-expected = 0
-
-
-
+    #expected
+    expected = 0
 
 
 
-#closing sockets
-receiver_in_socket.close()
-receiver_out_socket.close()
 
-#closing the file
-#output_file.close()
+
+
+    #closing sockets
+    receiver_in_socket.close()
+    receiver_out_socket.close()
+
+    #closing the file
+    #output_file.close()
