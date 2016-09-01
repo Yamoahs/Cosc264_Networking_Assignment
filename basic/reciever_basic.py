@@ -56,8 +56,6 @@ if len(args) == 4:
     # output_file = open("{}".format(out_filename).read())
 
 
-
-
 else:
     print("Input ERROR")
 
