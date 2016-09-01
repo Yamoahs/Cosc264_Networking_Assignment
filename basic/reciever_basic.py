@@ -33,7 +33,9 @@ VALID_PORTS =  range(1024, 64001)
 
 # Get the arguments list
 args = (sys.argv)
-input_successful = False
+
+#Flag to make sure stdin arguemtents
+stdin_successful = False
 
 #try:
 if len(args) == 4:
@@ -47,12 +49,12 @@ if len(args) == 4:
 
     print("IN PORT: {}\nOUT PORT: {}\nFILENAME: {}".format(reciever_in_port, \
      reciever_out_port, out_filename))
-    input_successful = True
+    stdin_successful = True
 
 else:
     print("Input ERROR")
 
-if input_successful:
+if stdin_successful:
     #Create the sockets
     receiver_in_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     receiver_out_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
