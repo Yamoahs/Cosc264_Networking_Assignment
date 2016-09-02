@@ -19,6 +19,8 @@ args = (sys.argv)
 #Flag to make sure stdin arguemtents
 stdin_successful = False
 
+DATA_SIZE = 512
+
 #try:
 if len(args) == 5:
     for port in args[1:-1]:
@@ -33,7 +35,7 @@ if len(args) == 5:
 
     #Checking if input file exists
     if os.path.isfile(filename):
-        #Open File
+        #Open File in byte mode
         input_file = open(filename, 'rb')
         stdin_successful = True
     else:
@@ -62,9 +64,14 @@ if stdin_successful:
     sender_out_socket.connect((HOST,reciever_in_port))
 
     next_ = 0
+    exist_flag = False
 
-    data = "hello Reciever"
-    sender_out_socket.send(data.encode('utf-8'))
+    #while not exist_flag:
+    data = input_file.read(DATA_SIZE)
+
+
+    #data = "hello Reciever"
+    sender_out_socket.send(data)
     data = sender_in_socket.recv(512)
     print("From Reciever: ", data.decode('utf-8'))
 
