@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys
 import socket
+import os.path
 
 '''
 Sender Sockets: s_in and s_out
@@ -14,7 +15,9 @@ VALID_PORTS =  range(1024, 64001)
 
 # Get the arguments list
 args = (sys.argv)
-#cmdargs.pop(0)
+
+#Flag to make sure stdin arguemtents
+stdin_successful = False
 
 #try:
 if len(args) == 5:
@@ -22,33 +25,52 @@ if len(args) == 5:
         if int(port) not in VALID_PORTS:
             #HAVE A TRY EXCEPTION
             print("port {} not a valid port".format(port))
-    sender_in_port = args[1]
-    sender_out_port = args[2]
-    channel_sender_in = args[3]
+            quit()
+    sender_in_port = int(args[1])
+    sender_out_port = int(args[2])
+    reciever_in_port = int(args[3])
     filename = str(args[4])
 
-    print("IN PORT: {}\nOUT PORT: {}\n\
-channel_sender_in PORT: {}\nFILENAME: {}".format(sender_in_port, \
-     sender_out_port, channel_sender_in, filename))
+    #Checking if input file exists
+    if os.path.isfile(filename):
+        #Open File
+        input_file = open(filename, 'rb')
+        stdin_successful = True
+    else:
+        print('File does not exists')
 
 else:
     print("Input ERROR")
 #raise Exception("Invalid number of parameters")
 
-#Create the sockets
-sender_in = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sender_out = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#if stdin inputs are corerct begin socket initialisation
+if stdin_successful:
 
-#Bind the sockets
-sender_in.bind((HOST,sender_in_port))
-sender_out.bind((HOST,sender_out_port))
+    print("IN PORT: {}\nOUT PORT: {}\nRECIEVER IN PORT: {}\nFILENAME: {}"\
+    .format(sender_in_port, sender_out_port, reciever_in_port, filename))
 
 
-s_in.connect(("localhost", 1234))
+    #Create the sockets
+    sender_in_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sender_out_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-data = "hello server"
-s_in.send(data.encode('utf-8'))
-data = s_in.recv(512)
-print("From Reciever: ", data.decode('utf-8'))
+    #Bind the sockets
+    sender_in_socket.bind((HOST,sender_in_port))
+    sender_out_socket.bind((HOST,sender_out_port))
 
-s_in.close()
+    #Connect the sockets
+    sender_out_socket.connect((HOST,reciever_in_port))
+
+    next_ = 0
+
+    data = "hello Reciever"
+    sender_out_socket.send(data.encode('utf-8'))
+    data = sender_in_socket.recv(512)
+    print("From Reciever: ", data.decode('utf-8'))
+
+
+    sender_out_socket.close()
+    sender_in_socket.close()
+
+    #closing the file
+    input_file.close()
