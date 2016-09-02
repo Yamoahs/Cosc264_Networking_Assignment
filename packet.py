@@ -1,3 +1,5 @@
+import struct
+
 class Packet():
     def __init__(self, magicno, packet_type, seqno, dataLen, data):
         self.magicno = int(magicno)
