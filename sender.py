@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys
 import socket
+import select
 import packet
 import struct
 import os.path
@@ -25,6 +26,9 @@ DATA_SIZE = 512
 MAGICNO = 0x497E
 PTYPE_DATA = 0
 PTYPE_ACK = 1
+TIME_OUT = 1
+
+sent_packets = 0
 
 #try:
 if len(args) == 5:
@@ -90,10 +94,33 @@ if stdin_successful:
 
 
 
-    #data = "hello Reciever"
-    sender_out_socket.send(data)
-    data = sender_in_socket.recv(512)
-    print("From Reciever: ", data.decode('utf-8'))
+
+        recieved_packet = False
+        while not recieved_packet:
+            sender_out_socket.send(packet_buffer)
+            sent_packets += 1
+
+            ack = select.select([sender_in_socket], [], [], TIME_OUT)
+            if ack[0] != []:
+                rcvd = sender_in_socket.recv(1024)
+                rcvd_magicno, rcvd_tpye, rcvd_seqno, rcvd_dataLen = packet.decoder(rcvd)
+
+                if rcvd_magicno == MAGICNO and rcvd_tpye == PTYPE_ACK and rcvd_dataLen == 0 and rcvd_seqno == next_:
+                    next_ = 1 - next_
+                    recieved_packet = True
+
+
+
+
+
+
+
+
+
+
+    # sender_out_socket.send(data)
+    # data = sender_in_socket.recv(512)
+    # print("From Reciever: ", data.decode('utf-8'))
 
 
     sender_out_socket.close()
@@ -101,3 +128,4 @@ if stdin_successful:
 
     #closing the file
     input_file.close()
+    print("Packets Sent:", sent_packets)
