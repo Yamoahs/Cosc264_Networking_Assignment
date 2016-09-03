@@ -1,10 +1,11 @@
 #!/usr/bin/python
-import sys
-import socket
-import select
 import packet
-import struct
 import os.path
+import select
+import socket
+import struct
+import sys
+
 
 '''
 Sender Sockets: s_in and s_out
@@ -85,13 +86,11 @@ if stdin_successful:
 
         else:
             data_packet = packet.Packet_head(MAGICNO, PTYPE_DATA,next_, data_len)
-            head_in_bytes = data_packet.encoder()
+            head_in_bytes = data_packet.encoder()\
 
+        print('datalen:', data_len)
         packet_buffer = bytearray(head_in_bytes + data)
         print("Packet Buffer:", packet_buffer)
-
-
-
 
 
 
@@ -111,17 +110,9 @@ if stdin_successful:
 
 
 
-
-
-
-
-
-
-
     # sender_out_socket.send(data)
     # data = sender_in_socket.recv(512)
     # print("From Reciever: ", data.decode('utf-8'))
-
 
     sender_out_socket.close()
     sender_in_socket.close()
