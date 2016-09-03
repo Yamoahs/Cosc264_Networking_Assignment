@@ -1,8 +1,10 @@
 #!/usr/bin/python
-import sys
-import socket
-import select
+import packet
 import os.path
+import select
+import socket
+import struct
+import sys
 
 '''
 Reciever Sockets: r_in and r_out
@@ -19,6 +21,12 @@ args = (sys.argv)
 
 #Flag to make sure stdin arguemtents
 stdin_successful = False
+
+DATA_SIZE = 512
+MAGICNO = 0x497E
+PTYPE_DATA = 0
+PTYPE_ACK = 1
+TIME_OUT = 1
 
 #try:
 if len(args) == 5:
@@ -60,19 +68,25 @@ if stdin_successful:
     #connect the socket
     receiver_out_socket.connect((HOST,sender_in_port))
 
-
     #expected
     expected = 0
 
+    recieved_packet = False
+    # while not recieved_packet:
+    #     ack = select.select([],[reciever_in_port], [], TIME_OUT)
+
+
+    head = receiver_in_socket.recv(16)
     data = receiver_in_socket.recv(512)
-    print("From Sender: ", data.decode('utf-8'))
+    rcvd_magicno, rcvd_tpye, rcvd_seqno, rcvd_dataLen = packet.decoder(head)
+    print("From Sender head: ", head)
+    print(rcvd_magicno)
+    print(rcvd_tpye)
+    print(rcvd_seqno)
+    print(rcvd_dataLen)
+    print("From Sender data: ", data.decode('utf-8'))
     data = "Back to ya sender"
     receiver_out_socket.send(data.encode('utf-8'))
-
-
-
-
-
 
     #closing sockets
     receiver_in_socket.close()
