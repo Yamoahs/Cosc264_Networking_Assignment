@@ -1,6 +1,8 @@
 #!/usr/bin/python
 import sys
 import socket
+import packet
+import struct
 import os.path
 
 '''
@@ -20,6 +22,9 @@ args = (sys.argv)
 stdin_successful = False
 
 DATA_SIZE = 512
+MAGICNO = 0x497E
+PTYPE_DATA = 0
+PTYPE_ACK = 1
 
 #try:
 if len(args) == 5:
@@ -66,8 +71,23 @@ if stdin_successful:
     next_ = 0
     exist_flag = False
 
-    #while not exist_flag:
-    data = input_file.read(DATA_SIZE)
+    while not exist_flag:
+        data = input_file.read(DATA_SIZE)
+        data_len = len(data)
+        if data_len == 0:
+            data_packet = packet.Packet_head(MAGICNO, PTYPE_DATA, next_, data_len)
+            head_in_bytes = data_packet.encoder()
+            exist_flag = True
+
+        else:
+            data_packet = packet.Packet_head(MAGICNO, PTYPE_DATA,next_, data_len)
+            head_in_bytes = data_packet.encoder()
+
+        packet_buffer = bytearray(head_in_bytes + data)
+        print("Packet Buffer:", packet_buffer)
+
+
+
 
 
     #data = "hello Reciever"
