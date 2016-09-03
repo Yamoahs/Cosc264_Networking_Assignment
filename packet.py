@@ -1,13 +1,12 @@
 import struct
 
-class Packet():
+class Packet_head():
 
-    def __init__(self, magicno, packet_type, seqno, dataLen, data):
+    def __init__(self, magicno, packet_type, seqno, dataLen):
         self.magicno = int(magicno)
         self.packet_type = int(packet_type)
         self.seqno = int(seqno)
         self.dataLen = int(dataLen)
-        self.data = data
         self.packet_format = "iiii"
 
 
@@ -21,7 +20,7 @@ class Packet():
         return decoded
 
 
-new_packet = Packet(1,2,3,4,None)
+new_packet = Packet_head(1,2,3,10)
 byte = new_packet.encoder()
 print(byte)
 w,x,y,z = new_packet.decoder(byte)
