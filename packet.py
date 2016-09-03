@@ -15,16 +15,23 @@ class Packet_head():
         return encoded
 
 
-    def decoder(self, output):
-        decoded = struct.unpack(self.packet_format, output)
-        return decoded
 
+def decoder(output):
+    packet_format = "iiii"
+    decoded = struct.unpack(packet_format, output)
+    return decoded
 
-new_packet = Packet_head(1,2,3,10)
-byte = new_packet.encoder()
-print(byte)
-w,x,y,z = new_packet.decoder(byte)
-print(w)
-print(x)
-print(y)
-print(z)
+# new_packet = Packet_head(1,2,3,10)
+# byte = new_packet.encoder()
+# print(byte)
+# w,x,y,z = new_packet.decoder(byte)
+# print(w)
+# print(x)
+# print(y)
+# print(z)
+# yo = b'\x01\x00\x00\x00\x02\x00\x00\x00\x03\x00\x00\x00\n\x00\x00\x00'
+# a,b,c,d = decoder2(yo)
+# print(a)
+# print(b)
+# print(c)
+# print(d)
