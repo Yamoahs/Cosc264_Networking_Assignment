@@ -86,7 +86,7 @@ if stdin_successful:
 
         else:
             data_packet = packet.Packet_head(MAGICNO, PTYPE_DATA,next_, data_len)
-            head_in_bytes = data_packet.encoder()\
+            head_in_bytes = data_packet.encoder()
 
         print('datalen:', data_len)
         packet_buffer = bytearray(head_in_bytes + data)
