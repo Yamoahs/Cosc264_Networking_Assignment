@@ -15,52 +15,52 @@ test 9: 101
 test 10: 101
 
 P: 0.01
-test 1:
-test 2:
-test 3:
-test 4:
-test 5:
-test 6:
-test 7:
-test 8:
-test 9:
-test 10:
+test 1: 103
+test 2: 102
+test 3: 102
+test 4: 104
+test 5: 103
+test 6: 106
+test 7: 104
+test 8: 102
+test 9: 101
+test 10: 102
 
 P: 0.05
-test 1:
-test 2:
-test 3:
-test 4:
-test 5:
-test 6:
-test 7:
-test 8:
-test 9:
-test 10:
+test 1: 111
+test 2: 111
+test 3: 110
+test 4: 116
+test 5: 111
+test 6: 112
+test 7: 111
+test 8: 108
+test 9: 109
+test 10: 111
 
 P: 0.1
-test 1:
-test 2:
-test 3:
-test 4:
-test 5:
-test 6:
-test 7:
-test 8:
-test 9:
-test 10:
+test 1: 121
+test 2: 129
+test 3: 133
+test 4: 124
+test 5: 113
+test 6: 128
+test 7: 123
+test 8: 129
+test 9: 128
+test 10: 129
 
 P: 0.2
-test 1:
-test 2:
-test 3:
-test 4:
-test 5:
-test 6:
-test 7:
-test 8:
-test 9:
-test 10:
+test 1: 169
+test 2: 163
+test 3: 150
+test 4: 149
+test 5: 169
+test 6: 149
+test 7: 164
+test 8: 158
+test 9: 152
+test 10: 158
 
 P: 0.3
 test 1: 200
