@@ -40,7 +40,7 @@ if len(args) == 5:
             quit()
     sender_in_port = int(args[1])
     sender_out_port = int(args[2])
-    reciever_in_port = int(args[3])
+    chan_send_in_port = int(args[3])
     filename = str(args[4])
 
     #Checking if input file exists
@@ -58,8 +58,8 @@ else:
 #if stdin inputs are corerct begin socket initialisation
 if stdin_successful:
 
-    print("IN PORT: {}\nOUT PORT: {}\nRECIEVER IN PORT: {}\nFILENAME: {}"\
-    .format(sender_in_port, sender_out_port, reciever_in_port, filename))
+    print("IN PORT: {}\nOUT PORT: {}\CHAN SENDER IN PORT: {}\nFILENAME: {}"\
+    .format(sender_in_port, sender_out_port, chan_send_in_port, filename))
 
 
     #Create the sockets
@@ -71,7 +71,7 @@ if stdin_successful:
     sender_out_socket.bind((HOST,sender_out_port))
 
     #Connect the sockets
-    sender_out_socket.connect((HOST,reciever_in_port))
+    sender_out_socket.connect((HOST,chan_send_in_port))
 
     next_ = 0
     exist_flag = False
@@ -88,9 +88,9 @@ if stdin_successful:
             data_packet = packet.Packet_head(MAGICNO, PTYPE_DATA,next_, data_len)
             head_in_bytes = data_packet.encoder()
 
-        print('datalen:', data_len)
+        # print('datalen:', data_len)
         packet_buffer = bytearray(head_in_bytes + data)
-        print("Packet Buffer:", packet_buffer)
+        # print("Packet Buffer:", packet_buffer)
 
 
 
@@ -98,6 +98,7 @@ if stdin_successful:
         while not recieved_packet:
             sender_out_socket.send(packet_buffer)
             sent_packets += 1
+            print(sent_packets)
 
             ack = select.select([sender_in_socket], [], [], TIME_OUT)
             if ack[0] != []:
