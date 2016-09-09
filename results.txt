@@ -1,0 +1,75 @@
+python3 reciever.py 1230 1231 1292 output7.txt
+python3 channel.py 1293 1294 1292 1295 1296 1230 0.0
+python3 sender.py 1296 1237 1293 pride.txt
+
+P: 0.0
+test 1: 101
+test 2: 101
+test 3: 101
+test 4: 101
+test 5: 101
+test 6: 101
+test 7: 101
+test 8: 101
+test 9: 101
+test 10: 101
+
+P: 0.01
+test 1:
+test 2:
+test 3:
+test 4:
+test 5:
+test 6:
+test 7:
+test 8:
+test 9:
+test 10:
+
+P: 0.05
+test 1:
+test 2:
+test 3:
+test 4:
+test 5:
+test 6:
+test 7:
+test 8:
+test 9:
+test 10:
+
+P: 0.1
+test 1:
+test 2:
+test 3:
+test 4:
+test 5:
+test 6:
+test 7:
+test 8:
+test 9:
+test 10:
+
+P: 0.2
+test 1:
+test 2:
+test 3:
+test 4:
+test 5:
+test 6:
+test 7:
+test 8:
+test 9:
+test 10:
+
+P: 0.3
+test 1: 200
+test 2: 201
+test 3: 232
+test 4: 192
+test 5: 197
+test 6: 200
+test 7: 195
+test 8: 230
+test 9: 228
+test 10: 196
