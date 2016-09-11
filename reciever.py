@@ -7,9 +7,10 @@ import struct
 import sys
 
 '''
-Reciever Sockets: r_in and r_out
-
+Reciever.py
+Samuel Yamoah & Sarang Leehan 2016
 '''
+
 #IP address
 HOST =  "127.0.0.1"
 
@@ -22,24 +23,30 @@ args = (sys.argv)
 #Flag to make sure stdin arguemtents
 stdin_successful = False
 
+#Data size in bytes
 DATA_SIZE = 512
+#Magic Number
 MAGICNO = 0x497E
+#Packet types
 PTYPE_DATA = 0
 PTYPE_ACK = 1
+
 TIME_OUT = 1
 
 def create_ack_packet(rcvd_seqno):
+    '''Function creates an acknowledge packet'''
     acknowledge_packet = packet.Packet_head(MAGICNO, PTYPE_ACK, rcvd_seqno, 0)
     head_in_bytes = acknowledge_packet.encoder()
     packet_buffer = bytearray(head_in_bytes)
     return packet_buffer
 
 
-#try:
 if len(args) == 5:
+    if len(args) != len(set(args)):
+        print("Duplicate Port Numbers")
+        quit()
     for port in args[1:-1]:
         if int(port) not in VALID_PORTS:
-            #HAVE A TRY EXCEPTION
             print("port {} not a valid port".format(port))
             quit()
     reciever_in_port = int(args[1])
@@ -53,40 +60,52 @@ if len(args) == 5:
     else:
         output_file = open(out_filename, "wb")
         stdin_successful = True
-    # output_file = open("{}".format(out_filename).read())
-
 
 else:
-    print("Input ERROR")
+    print("INPUT ERROR. Ports or File invalid")
 
+#if stdin inputs are corerct begin socket initialisation
 if stdin_successful:
 
     print("IN PORT: {}\nOUT PORT: {}\nCHAN RECV IN PORT: {}\nFILENAME: {}"\
     .format(reciever_in_port, reciever_out_port, chan_recv_in_port, out_filename))
 
     #Create the sockets
-    receiver_in_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    receiver_out_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        receiver_in_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    except socket.error as e:
+        print(str(e))
+    try:
+        receiver_out_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    except socket.error as e:
+        print(str(e))
 
     #Bind the sockets
-    receiver_in_socket.bind((HOST,reciever_in_port))
-    receiver_out_socket.bind((HOST,reciever_out_port))
+    try:
+        receiver_in_socket.bind((HOST,reciever_in_port))
+    except socket.error as e:
+        print(str(e))
+    try:
+        receiver_out_socket.bind((HOST,reciever_out_port))
+    except socket.error as e:
+        print(str(e))
 
     #connect the socket
-    receiver_out_socket.connect((HOST,chan_recv_in_port))
+    try:
+        receiver_out_socket.connect((HOST,chan_recv_in_port))
+    except socket.error as e:
+        print(str(e))
 
     #expected
     expected = 0
 
     recieved_data = False
     while not recieved_data:
-        # ack = select.select([],[reciever_in_port], [], TIME_OUT)
-        # if ack[1] != []:
-            lolol = receiver_in_socket.recv(1024)
-            head = lolol[:16]#receiver_in_socket.recv(16)
-            data = lolol[16:]#receiver_in_socket.recv(1024)
-            # print("Data", data)
-            rcvd_magicno, rcvd_tpye, rcvd_seqno, rcvd_dataLen = packet.decoder(head)
+            incoming_packet = receiver_in_socket.recv(1024)
+            head = incoming_packet[:16]
+            data = incoming_packet[16:]
+            rcvd_magicno, rcvd_tpye, rcvd_seqno, rcvd_dataLen = \
+            packet.decoder(head)
 
             if rcvd_magicno == MAGICNO and rcvd_tpye == PTYPE_DATA:
                 if rcvd_seqno != expected:
@@ -100,7 +119,6 @@ if stdin_successful:
                     if rcvd_dataLen > 0:
                         output_file.write(data)
 
-
                     else:
                         #closing sockets
                         receiver_in_socket.close()
@@ -110,14 +128,3 @@ if stdin_successful:
 
                         #closing the file
                         output_file.close()
-
-
-    #
-    # print("From Sender head: ", head)
-    # print(rcvd_magicno)
-    # print(rcvd_tpye)
-    # print(rcvd_seqno)
-    # print(rcvd_dataLen)
-    # print("From Sender data: ", data.decode('utf-8'))
-    # data = "Back to ya sender"
-    # receiver_out_socket.send(data.encode('utf-8'))

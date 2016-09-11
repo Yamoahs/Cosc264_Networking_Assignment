@@ -6,11 +6,11 @@ import socket
 import struct
 import sys
 
-
 '''
-Sender Sockets: s_in and s_out
-
+Sender.py
+Samuel Yamoah & Sarang Leehan 2016
 '''
+
 #IP address
 HOST =  "127.0.0.1"
 
@@ -23,19 +23,24 @@ args = (sys.argv)
 #Flag to make sure stdin arguemtents
 stdin_successful = False
 
+#Data size in bytes
 DATA_SIZE = 512
+#Magic Number
 MAGICNO = 0x497E
+#Packet types
 PTYPE_DATA = 0
 PTYPE_ACK = 1
+
 TIME_OUT = 1
 
 sent_packets = 0
 
-#try:
 if len(args) == 5:
+    if len(args) != len(set(args)):
+        print("Duplicate Port Numbers")
+        quit()
     for port in args[1:-1]:
         if int(port) not in VALID_PORTS:
-            #HAVE A TRY EXCEPTION
             print("port {} not a valid port".format(port))
             quit()
     sender_in_port = int(args[1])
@@ -52,8 +57,7 @@ if len(args) == 5:
         print('File does not exists')
 
 else:
-    print("Input ERROR")
-#raise Exception("Invalid number of parameters")
+    print("INPUT ERROR. Ports or File invalid")
 
 #if stdin inputs are corerct begin socket initialisation
 if stdin_successful:
@@ -63,15 +67,30 @@ if stdin_successful:
 
 
     #Create the sockets
-    sender_in_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sender_out_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        sender_in_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    except socket.error as e:
+        print(str(e))
+    try:
+        sender_out_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    except socket.error as e:
+        print(str(e))
 
     #Bind the sockets
-    sender_in_socket.bind((HOST,sender_in_port))
-    sender_out_socket.bind((HOST,sender_out_port))
+    try:
+        sender_in_socket.bind((HOST,sender_in_port))
+    except socket.error as e:
+        print(str(e))
+    try:
+        sender_out_socket.bind((HOST,sender_out_port))
+    except socket.error as e:
+        print(str(e))
 
     #Connect the sockets
-    sender_out_socket.connect((HOST,chan_send_in_port))
+    try:
+        sender_out_socket.connect((HOST,chan_send_in_port))
+    except socket.error as e:
+        print(str(e))
 
     next_ = 0
     exist_flag = False
@@ -80,17 +99,18 @@ if stdin_successful:
         data = input_file.read(DATA_SIZE)
         data_len = len(data)
         if data_len == 0:
-            data_packet = packet.Packet_head(MAGICNO, PTYPE_DATA, next_, data_len)
+            data_packet = packet.Packet_head(MAGICNO, PTYPE_DATA, next_, \
+            data_len)
             head_in_bytes = data_packet.encoder()
             exist_flag = True
 
         else:
-            data_packet = packet.Packet_head(MAGICNO, PTYPE_DATA,next_, data_len)
+            data_packet = packet.Packet_head(MAGICNO, PTYPE_DATA,next_, \
+             data_len)
             head_in_bytes = data_packet.encoder()
 
-        # print('datalen:', data_len)
+        #Setting the Packet Buffer
         packet_buffer = bytearray(head_in_bytes + data)
-        # print("Packet Buffer:", packet_buffer)
 
 
 
@@ -103,18 +123,15 @@ if stdin_successful:
             ack = select.select([sender_in_socket], [], [], TIME_OUT)
             if ack[0] != []:
                 rcvd = sender_in_socket.recv(1024)
-                rcvd_magicno, rcvd_tpye, rcvd_seqno, rcvd_dataLen = packet.decoder(rcvd)
+                rcvd_magicno, rcvd_tpye, rcvd_seqno, rcvd_dataLen = \
+                packet.decoder(rcvd)
 
-                if rcvd_magicno == MAGICNO and rcvd_tpye == PTYPE_ACK and rcvd_dataLen == 0 and rcvd_seqno == next_:
+                if rcvd_magicno == MAGICNO and rcvd_tpye == PTYPE_ACK\
+                 and rcvd_dataLen == 0 and rcvd_seqno == next_:
                     next_ = 1 - next_
                     recieved_packet = True
 
-
-
-    # sender_out_socket.send(data)
-    # data = sender_in_socket.recv(512)
-    # print("From Reciever: ", data.decode('utf-8'))
-
+    #Closing the Sockets
     sender_out_socket.close()
     sender_in_socket.close()
 

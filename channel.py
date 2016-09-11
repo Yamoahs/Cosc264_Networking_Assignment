@@ -7,7 +7,10 @@ import socket
 import struct
 import sys
 
-'''Channel.py'''
+'''
+channel.py
+Samuel Yamoah & Sarang Leehan 2016
+'''
 
 #IP address
 HOST =  "127.0.0.1"
@@ -24,14 +27,17 @@ stdin_successful = False
 MAGICNO = 0x497E
 
 def packet_check(recv_packet):
+    '''Function decodes the packet head'''
     head = recv_packet[:16]
     decoded = packet.decoder(head)
     return decoded
 
 if len(args) == 8:
+    if len(args) != len(set(args)):
+        print("Duplicate Port Numbers")
+        quit()
     for port in args[1:-1]:
         if int(port) not in VALID_PORTS:
-            #HAVE A TRY EXCEPTION
             print("port {} not a valid port".format(port))
             quit()
     if float(args[7]) < 0 or float(args[7]) >= 1:
@@ -49,7 +55,7 @@ if len(args) == 8:
 
 
 else:
-    print("Input ERROR")
+    print("INPUT ERROR. Ports or File invalid")
 
 if stdin_successful:
     print("CS IN PORT: {}\nCS OUT PORT: {}\nCR IN PORT: {}\nCR OUT PORT: {}\n\
